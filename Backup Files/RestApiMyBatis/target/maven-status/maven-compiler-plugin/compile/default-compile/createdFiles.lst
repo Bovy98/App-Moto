@@ -1,0 +1,17 @@
+com\riccardo\models\Moto.class
+com\riccardo\models\ImmatricolazioniExample$Criteria.class
+com\riccardo\filters\CorsFilter.class
+com\riccardo\models\MotoExample$GeneratedCriteria.class
+com\riccardo\models\Immatricolazioni.class
+com\riccardo\models\ImmatricolazioniExample.class
+com\riccardo\models\MotoExample$Criterion.class
+com\riccardo\mapper\ImmatricolazioniMapper.class
+com\riccardo\models\MotoExample.class
+com\riccardo\models\ImmatricolazioniExample$GeneratedCriteria.class
+com\riccardo\ws\SqlSessionFactoryManager.class
+com\riccardo\models\MotoExample$Criteria.class
+com\riccardo\ws\MotoException.class
+com\riccardo\mapper\MotoMapper.class
+com\riccardo\models\ImmatricolazioniExample$Criterion.class
+com\riccardo\ws\MotoServicesMyBatis.class
+main\main.class

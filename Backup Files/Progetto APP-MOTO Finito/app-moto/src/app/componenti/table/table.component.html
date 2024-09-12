@@ -1,0 +1,43 @@
+<!-- <div class="container-fluid">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Modello</th>
+        <th scope="col" style="text-align: right">Cc</th>
+        <th scope="col" style="text-align: right">Anno</th>
+        <th scope="col" style="text-align: right">Prezzo(€)</th>
+        <th scope="col" style="text-align: right"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let element of motoArray; index as i">
+        <td>{{ element.modello }}</td>
+        <td style="text-align: right">{{ element.cc | europeanNumber }}</td>
+        <td style="text-align: right">{{ element.anno }}</td>
+        <td style="text-align: right">{{ element.prezzo | europeanNumber }}</td>
+        <td style="text-align: right">
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="motoComponent.openEditModal(content3)"
+            style="margin-right: 10px"
+          >
+            Modifica
+          </button>
+          <button type="button" class="btn btn-outline-secondary">
+            Rimuovi
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td style="text-align: right; font-weight: bold">
+          {{ prezzoTotale | europeanNumber }}
+        </td>
+        <td style="font-weight: bold; text-align: right">Totali</td>
+      </tr>
+    </tbody>
+  </table>
+</div> -->

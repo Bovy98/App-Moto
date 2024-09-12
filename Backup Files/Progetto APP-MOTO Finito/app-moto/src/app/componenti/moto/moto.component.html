@@ -1,0 +1,572 @@
+<app-navbar></app-navbar>
+<br />
+
+<div class="container-fluid">
+  <ngb-toast
+    *ngFor="let toast of toastService.toasts"
+    [class]="toast.classname"
+    [autohide]="true"
+    [delay]="toast.delay || 5000"
+    (hidden)="toastService.remove(toast)"
+  >
+    <ng-template [ngIf]="isTemplate(toast)" [ngIfElse]="text">
+      <ng-template [ngTemplateOutlet]="toast.textOrTpl"></ng-template>
+    </ng-template>
+
+    <ng-template #text>{{ toast.textOrTpl }}</ng-template>
+  </ngb-toast>
+
+  <div class="card border-primary mb-3">
+    <div class="card-header">Ricerca della moto</div>
+    <div class="card-body">
+      <form
+        [formGroup]="motoGetForm"
+        (ngSubmit)="searchByExample()"
+        class="mt-3"
+      >
+        <div class="row">
+          <div class="col form-group">
+            <label for="modello">Modello</label>
+            <input
+              type="text"
+              id="modello"
+              name="modello"
+              formControlName="modello"
+              class="form-control"
+            />
+          </div>
+
+          <div class="col form-group">
+            <label for="cc">Cc</label>
+            <div class="input-group">
+              <span class="input-group-text">Da</span>
+              <input
+                type="number"
+                id="ccDa"
+                name="ccDa"
+                formControlName="ccDa"
+                class="form-control"
+              />
+            </div>
+
+            <div class="input-group">
+              <span class="input-group-text mt-2">A</span>
+              <input
+                type="number"
+                id="ccA"
+                name="ccA"
+                formControlName="ccA"
+                class="form-control mt-2"
+              />
+            </div>
+          </div>
+
+          <div class="col form-group">
+            <label for="anno">Anno</label>
+            <div class="input-group">
+              <span class="input-group-text">Da</span>
+              <input
+                type="number"
+                id="annoDa"
+                name="annoDa"
+                formControlName="annoDa"
+                class="form-control"
+              />
+            </div>
+            <div class="input-group">
+              <span class="input-group-text mt-2">A</span>
+              <input
+                type="number"
+                id="annoA"
+                name="annoA"
+                formControlName="annoA"
+                class="form-control mt-2"
+              />
+            </div>
+          </div>
+
+          <div class="col form-group">
+            <label for="prezzo">Prezzo</label>
+            <div class="input-group">
+              <span class="input-group-text">Da</span>
+              <input
+                type="number"
+                id="prezzoDa"
+                name="prezzoDa"
+                formControlName="prezzoDa"
+                class="form-control"
+              />
+            </div>
+            <div class="input-group">
+              <span class="input-group-text mt-2">A</span>
+              <input
+                type="number"
+                id="prezzoA"
+                name="prezzoA"
+                formControlName="prezzoA"
+                class="form-control mt-2"
+              />
+            </div>
+          </div>
+
+          <div class="col">
+            <button
+              type="button"
+              class="btn btn-secondary mt-4 ms-2"
+              (click)="motoGetForm.reset()"
+            >
+              Reset
+            </button>
+            <button type="submit" class="btn btn-primary mt-4 ms-2">
+              Cerca
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="card border-primary mb-3">
+    <div class="card-header">Risultati trovati</div>
+    <div class="card-body">
+      <div class="row">
+        <div class="d-flex flex-row-reverse pe-4">
+          <button
+            class="btn btn-primary ms-2"
+            (click)="openModal(content1)"
+          >
+            Aggiungi
+          </button>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="exportMotoToExcel()"
+          >
+            Esporta in Excel
+          </button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="container-fluid">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">
+                  Modello
+                  <span>
+                    <button
+                      type="button"
+                      class="btn btn-light btn-sm"
+                      (click)="orderByModelAsc()"
+                    >
+                      <span textContent="&#9650;">▲</span>
+                    </button>
+                  </span>
+                  <span>
+                    <button
+                      type="button"
+                      class="btn btn-light btn-sm"
+                      (click)="orderByModelDesc()"
+                    >
+                      <span textContent="&#9660;">▼</span>
+                    </button>
+                  </span>
+                </th>
+                <th scope="col" class="text-end">
+                  Cc
+                  <span>
+                    <button
+                      type="button"
+                      class="btn btn-light btn-sm"
+                      (click)="orderByCcAsc()"
+                    >
+                      <span textContent="&#9650;">▲</span>
+                    </button>
+                  </span>
+                  <span>
+                    <button
+                      type="button"
+                      class="btn btn-light btn-sm"
+                      (click)="orderByCcDesc()"
+                    >
+                      <span textContent="&#9660;">▼</span>
+                    </button>
+                  </span>
+                </th>
+                <th scope="col" class="text-end">
+                  Anno
+                  <span>
+                    <button
+                      type="button"
+                      class="btn btn-light btn-sm"
+                      (click)="orderByYearAsc()"
+                    >
+                      <span textContent="&#9650;">▲</span>
+                    </button>
+                  </span>
+                  <span>
+                    <button
+                      type="button"
+                      class="btn btn-light btn-sm"
+                      (click)="orderByYearDesc()"
+                    >
+                      <span textContent="&#9660;">▼</span>
+                    </button>
+                  </span>
+                </th>
+                <th scope="col" class="text-end">
+                  Prezzo(€)
+                  <span>
+                    <button
+                      type="button"
+                      class="btn btn-light btn-sm"
+                      (click)="orderByPriceAsc()"
+                    >
+                      <span textContent="&#9650;">▲</span>
+                    </button>
+                  </span>
+                  <span>
+                    <button
+                      type="button"
+                      class="btn btn-light btn-sm"
+                      (click)="orderByPriceDesc()"
+                    >
+                      <span textContent="&#9660;">▼</span>
+                    </button>
+                  </span>
+                </th>
+                <th scope="col" class="text-end"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let element of motoArray; index as i">
+                <td>{{ element.modello }}</td>
+                <td class="text-end">
+                  {{ element.cc | europeanNumber }}
+                </td>
+                <td class="text-end">{{ element.anno }}</td>
+                <td class="text-end">
+                  {{ element.prezzo | europeanNumber }}
+                </td>
+                <td class="text-end">
+                  <button
+                    type="button"
+                    class="btn btn-secondary me-2"
+                    (click)="exportMotoToPdf(element.idMoto)"
+                  >
+                    Esporta in PDF
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-secondary me-2"
+                    (click)="openEditModal(content3, element)"
+                  >
+                    Modifica
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    (click)="openDeleteModal(content4, element.idMoto)"
+                  >
+                    Rimuovi
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="text-end fw-bold">
+                  {{ prezzoTotale | europeanNumber }}
+                </td>
+                <td class="text-end fw-bold">Totali</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- <app-table
+          [motoArray]="motoArray"
+          [prezzoTotale]="prezzoTotale"
+          class="mt-3"
+        ></app-table> -->
+      </div>
+      <ngb-pagination
+        [(page)]="currentPage"
+        [pageSize]="itemsPerPage"
+        [collectionSize]="totalItems"
+        (pageChange)="searchByExample()"
+      ></ngb-pagination>
+    </div>
+  </div>
+</div>
+<!-- Modale addMoto -->
+<ng-template #content1 let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Aggiungi Moto</h4>
+  </div>
+
+  <div class="modal-body">
+    <div class="container">
+      <form [formGroup]="motoPostForm" class="mt-3">
+        <div class="row">
+          <div class="col-form-group">
+            <label for="modello" class="form-label">Modello*</label>
+            <input
+              type="text"
+              id="modello"
+              name="modello"
+              formControlName="modello"
+              class="form-control"
+              required
+              [ngClass]="
+                motoPostForm.get('modello').invalid &&
+                motoPostForm.get('modello').touched
+                  ? 'form-control is-invalid'
+                  : 'form-control'
+              "
+            />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-form-group">
+            <label for="cc">Cc*</label>
+            <input
+              type="number"
+              id="cc"
+              name="cc"
+              formControlName="cc"
+              class="form-control"
+              required
+              [ngClass]="
+                motoPostForm.get('cc').invalid && motoPostForm.get('cc').touched
+                  ? 'form-control is-invalid'
+                  : 'form-control'
+              "
+            />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-form-group">
+            <label for="anno">Anno*</label>
+            <input
+              type="text"
+              id="anno"
+              name="anno"
+              formControlName="anno"
+              class="form-control"
+              required
+              [ngClass]="
+                motoPostForm.get('anno').invalid &&
+                motoPostForm.get('anno').touched
+                  ? 'form-control is-invalid'
+                  : 'form-control'
+              "
+            />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-form-group">
+            <label for="prezzo">Prezzo*</label>
+            <div class="input-group mb-3">
+              <span class="input-group-text">€</span>
+              <input
+                type="text"
+                class="form-control"
+                id="prezzo"
+                name="prezzo"
+                formControlName="prezzo"
+                required
+                [ngClass]="
+                  motoPostForm.get('prezzo').invalid &&
+                  motoPostForm.get('prezzo').touched
+                    ? 'form-control is-invalid'
+                    : 'form-control'
+                "
+              />
+              <span class="input-group-text">.00</span>
+            </div>
+          </div>
+        </div>
+      </form>
+      <p>* Campi obbligatori</p>
+      <!--* <p>{{ motoPostForm.valid }}</p> -->
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-outline-secondary" (click)="openModal(content2)">
+      Annulla
+    </button>
+    <button class="btn btn-outline-primary" (click)="motoPost()">
+      Aggiungi
+    </button>
+  </div>
+</ng-template>
+
+<!-- 2 Modale ConfirmExit -->
+<ng-template #content2 let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">
+      Sei sicuro di annullare le modifiche?
+    </h4>
+  </div>
+  <div class="modal-body">
+    <div class="text-warning">
+      <p>Attenzione: Perderai tutte le modifiche non salvate</p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-outline-dark"
+      (click)="modal.close(content2)"
+    >
+      Annulla
+    </button>
+    <button
+      type="button"
+      class="btn btn-outline-danger"
+      (click)="closeAllModals()"
+      (click)="motoPostForm.reset(content1)"
+    >
+      Continua
+    </button>
+  </div>
+</ng-template>
+
+<!-- MODALE put -->
+<ng-template #content3 let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Modifica Moto</h4>
+  </div>
+
+  <div class="modal-body">
+    <div class="container">
+      <form [formGroup]="motoPutForm" class="mt-3">
+        <div class="row">
+          <div class="col-form-group">
+            <label for="modello" class="form-label">Modello*</label>
+            <input
+              type="text"
+              id="modello"
+              name="modello"
+              formControlName="modello"
+              class="form-control"
+              required
+              [ngClass]="
+                motoPutForm.get('modello').invalid
+                  ? 'form-control is-invalid'
+                  : 'form-control'
+              "
+            />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-form-group">
+            <label for="cc">Cc*</label>
+            <input
+              type="number"
+              id="cc"
+              name="cc"
+              formControlName="cc"
+              class="form-control"
+              required
+              [ngClass]="
+                motoPutForm.get('cc').invalid
+                  ? 'form-control is-invalid'
+                  : 'form-control'
+              "
+            />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-form-group">
+            <label for="anno">Anno*</label>
+            <input
+              type="text"
+              id="anno"
+              name="anno"
+              formControlName="anno"
+              class="form-control"
+              required
+              [ngClass]="
+                motoPutForm.get('anno').invalid
+                  ? 'form-control is-invalid'
+                  : 'form-control'
+              "
+            />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-form-group">
+            <label for="prezzo">Prezzo*</label>
+            <div class="input-group mb-3">
+              <span class="input-group-text">€</span>
+              <input
+                type="text"
+                class="form-control"
+                id="prezzo"
+                name="prezzo"
+                formControlName="prezzo"
+                required
+                [ngClass]="
+                  motoPutForm.get('prezzo').invalid
+                    ? 'form-control is-invalid'
+                    : 'form-control'
+                "
+              />
+              <span class="input-group-text">.00</span>
+            </div>
+          </div>
+        </div>
+      </form>
+      <p>* Campi obbligatori</p>
+      <!--* <p>{{ motoPostForm.valid }}</p> -->
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-outline-secondary" (click)="openModal(content2)">
+      Annulla
+    </button>
+    <button class="btn btn-outline-primary" (click)="modifyMoto()">
+      Aggiorna
+    </button>
+  </div>
+</ng-template>
+
+<!-- Modale conferma eliminazione -->
+<ng-template #content4 let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">
+      Sei sicuro di eliminare la moto?
+    </h4>
+  </div>
+  <div class="modal-body">
+    <div class="text-danger">
+      <p>Attenzione: L'azione è irreversibile</p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-outline-dark"
+      (click)="modal.close(content4)"
+    >
+      Annulla
+    </button>
+    <button
+      type="button"
+      class="btn btn-outline-danger"
+      (click)="deleteMoto()"
+      (click)="closeAllModals()"
+      (click)="searchByExample()"
+    >
+      Continua
+    </button>
+  </div>
+</ng-template>

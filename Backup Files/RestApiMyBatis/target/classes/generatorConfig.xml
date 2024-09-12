@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+	<context id="context1" targetRuntime="MyBatis3">
+		
+		<plugin type="org.mybatis.generator.plugins.ToStringPlugin">
+			<property name="useToStringFromRoot" value="true" />
+		</plugin>
+		
+		<plugin type="org.mybatis.generator.plugins.RowBoundsPlugin"></plugin> <!-- per generare metodi che accettino paginazione server side -->
+
+		<!-- Connessione (DB.properties old) -->
+		<jdbcConnection
+			connectionURL="jdbc:postgresql://localhost:5432/provadb"
+			driverClass="org.postgresql.Driver" password="password"
+			userId="postgres" />
+
+		<!-- Genera i Models ovvero i JAVABEAN -->
+		<javaModelGenerator
+			targetPackage="com.riccardo.models" targetProject="RestApiMyBatis">
+		</javaModelGenerator>
+
+		<!-- Genera i Mapper ovvero i DAO -->
+		<sqlMapGenerator targetPackage="com.riccardo.mapper"
+			targetProject="RestApiMyBatis">
+		</sqlMapGenerator>
+		
+		<!-- Genera i mapper in formato XML ("XMLMAPPER") -->
+		<javaClientGenerator
+			targetPackage="com.riccardo.mapper" targetProject="RestApiMyBatis"
+			type="XMLMAPPER">
+		</javaClientGenerator>
+
+		<table schema="public" tableName="moto" domainObjectName="Moto">
+			<generatedKey column="id_moto" sqlStatement="JDBC" />
+		</table>
+		<table schema="public" tableName="immatricolazioni"
+			domainObjectName="Immatricolazioni">
+			<generatedKey column="id_immatricolazione"
+				sqlStatement="JDBC" />
+		</table>
+
+	</context>
+</generatorConfiguration>
