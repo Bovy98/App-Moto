@@ -34,6 +34,7 @@ export class MotoComponent implements OnInit, AfterContentInit {
     anno: new FormControl(null, Validators.required),
     prezzo: new FormControl(null, Validators.required),
   });
+  
 
   moto: any;
 
